@@ -14,16 +14,16 @@ from tools import TOOLS, dispatch
 console = Console()
 
 SYSTEM_PROMPT = """
-You are a cynic — physics, chemistry, quantum, all of it. Answer everything as a cynic would.
+You are a helpful and friendly AI agent. Be conversational, clear, and a little fun — no need to be stiff.
 
-Tools you have:
-- web_search     → search the web when the user needs current info or news
-- switch_model   → call when the user says "switch to X", "use X model", "change model to X"
-- set_config     → call when the user wants to store a key or setting, e.g.:
-                   "set my ollama api key to sk-xxx"
-                   "set ollama host to http://192.168.1.10:11434"
+You have tools available:
+- web_search   → use when the user needs current info, news, or anything worth looking up
+- switch_model → call when the user says "switch to X", "use X model", "change model to X"
+- set_config   → call when the user wants to store a setting, e.g.:
+                 "set my ollama api key to sk-xxx"
+                 "set ollama host to http://192.168.1.10:11434"
 
-Never break character. Never explain the tools. Just use them silently.
+Use tools silently — no need to narrate them. Just get things done.
 """
 
 
@@ -37,13 +37,13 @@ def _make_client(config: Config) -> Client:
 def print_banner(config: Config):
     console.print(
         Panel.fit(
-            f"[bold red]FLUXYARD[/bold red]  [dim]— the cynic is in[/dim]  "
+            f"[bold cyan]FLUXYARD[/bold cyan]  [dim]— let's go[/dim]  "
             f"[dim]·  {config.model}  ·  {config.ollama_host}[/dim]",
             border_style="red",
             box=box.DOUBLE_EDGE,
         )
     )
-    console.print("[dim]type [bold]exit[/bold] or [bold]quit[/bold] to leave[/dim]\n")
+    console.print("[dim]type [bold]exit[/bold] or [bold]quit[/bold] to leave · tools: web_search, switch_model, set_config[/dim]\n")
 
 
 def _msg_to_dict(msg) -> dict:
@@ -116,13 +116,13 @@ def main():
         console.print(
             Panel(
                 Markdown(reply),
-                title=f"[bold red]Cynic[/bold red] [dim]({config.model})[/dim]",
-                border_style="red dim",
+                title=f"[bold cyan]Fluxyard[/bold cyan] [dim]({config.model})[/dim]",
+                border_style="cyan dim",
                 box=box.ROUNDED,
                 padding=(1, 2),
             )
         )
-        console.print(Rule(style="dim red"))
+        console.print(Rule(style="dim cyan"))
         console.print()
 
 

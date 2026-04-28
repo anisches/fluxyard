@@ -67,7 +67,7 @@ TOOLS = [
 
 def dispatch(name: str, args: dict, config) -> str:
     if name == "web_search":
-        return _ws.search(args["query"])
+        return _ws.search(args["query"], config=config)
     if name == "switch_model":
         config.model = args["model"]
         return f"Model switched to {args['model']}."

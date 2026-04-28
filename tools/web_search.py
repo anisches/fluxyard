@@ -1,17 +1,27 @@
-"""Web search via DuckDuckGo — no API key required."""
+"""Web search via ollama.web_search — requires an Ollama API key."""
+
+from ollama import Client
+
+_NEEDS_KEY = (
+    "MISSING_OLLAMA_API_KEY: No Ollama API key is configured. "
+    "Ask the user for their Ollama API key and save it with set_config key=ollama_api_key."
+)
 
 
-def search(query: str, max_results: int = 5) -> str:
+def search(query: str, config=None, max_results: int = 5) -> str:
+    api_key = config.ollama_api_key if config else None
+    if not api_key:
+        return _NEEDS_KEY
+
     try:
-        from duckduckgo_search import DDGS
-    except ImportError:
-        return "Missing dependency — run:  pip install duckduckgo-search"
-
-    try:
-        results = []
-        with DDGS() as ddgs:
-            for r in ddgs.text(query, max_results=max_results):
-                results.append(f"**{r['title']}**\n{r['href']}\n{r['body']}")
-        return "\n\n---\n\n".join(results) if results else "No results found."
+        client = Client(host=config.ollama_host, headers={"Authorization": f"Bearer {api_key}"})
+        response = client.web_search(query, max_results=max_results)
+        if not response.results:
+            return "No results found."
+        parts = [
+            f"**{r.title}**\n{r.url}\n{r.content or ''}"
+            for r in response.results
+        ]
+        return "\n\n---\n\n".join(parts)
     except Exception as e:
         return f"Search error: {e}"

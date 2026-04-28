@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 
 CONFIG_DIR = Path.home() / ".fluxyard"
@@ -38,7 +39,7 @@ class Config:
 
     @property
     def ollama_host(self) -> str:
-        return self.data.get("ollama_host") or "http://localhost:11434"
+        return os.environ.get("OLLAMA_HOST") or self.data.get("ollama_host") or "http://localhost:11434"
 
     @property
     def ollama_api_key(self) -> str | None:
@@ -50,5 +51,3 @@ class Config:
 
     def get(self, key: str):
         return self.data.get(key)
-
-
